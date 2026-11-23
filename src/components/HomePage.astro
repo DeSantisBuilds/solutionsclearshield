@@ -1,9 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import FilmCard from './FilmCard.astro';
 import FilmVisual from './FilmVisual.astro';
-import QuoteBand from './QuoteBand.astro';
-import { filmOrder, routes, segments, steps, whyUs, type Lang } from '../data/site';
+import { filmOrder, films, routes, segments, steps, whyUs, type Lang } from '../data/site';
+import { photos, filmPhoto } from '../data/photos';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const fr = lang === 'fr';
@@ -11,14 +11,15 @@ const title = fr ? 'Films pour fenêtres à Montréal | Solutions ClearShield' :
 const description = fr
   ? "Film de sécurité, anti-graffiti, solaire et d'intimité pour maisons et commerces du Grand Montréal. Installateur certifié XPEL. Évaluation gratuite sur place."
   : 'Security, anti-graffiti, solar and privacy window film for homes and businesses across Greater Montreal. XPEL-certified installer. Free on-site assessment.';
+const q = routes.quote[lang];
 ---
 <Base lang={lang} route="home" title={title} description={description}>
   {fr && (
     <script is:inline slot="head">
       (function(){
         // Keep old GoHighLevel links working: ?lang=en, #confidentialite, #conditions
-        var q = location.search, h = location.hash;
-        if (/[?&]lang=en\b/.test(q)) { location.replace('/en/' + h); return; }
+        var s = location.search, h = location.hash;
+        if (/[?&]lang=en\b/.test(s)) { location.replace('/en/' + h); return; }
         if (h === '#confidentialite') location.replace('/confidentialite/');
         else if (h === '#conditions') location.replace('/conditions/');
         else if (h === '#services') history.replaceState(null, '', '#films');
@@ -26,117 +27,170 @@ const description = fr
     </script>
   )}
 
-  <section class="hero dark">
+  <section class="phero">
+    <Image src={photos.salon.src} alt="" widths={[640, 1024, 1600, 2400]} sizes="100vw" class="bg" loading="eager" fetchpriority="high" style={`object-position:${photos.salon.position}`} />
+    <span class="reg tl" aria-hidden="true"></span><span class="reg tr" aria-hidden="true"></span>
     <div class="wrap">
-      <div class="hero-copy">
-        <span class="eyebrow">{fr ? 'Films pour fenêtres · Grand Montréal' : 'Window film · Greater Montreal'}</span>
-        <h1>{fr ? 'Protégez' : 'Protect'} <span>{fr ? 'ce qui compte.' : 'what matters.'}</span></h1>
-        <p class="lede">{fr
-          ? "Films de sécurité, anti-graffiti, solaires et d'intimité pour les fenêtres des résidences et commerces du Grand Montréal."
-          : 'Security, anti-graffiti, solar and privacy film for the windows of homes and businesses across Greater Montreal.'}</p>
-        <div class="ctas">
-          <a class="btn btn-light" href={routes.quote[lang]}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a>
-          <a class="btn btn-ghost" href="#processus">{fr ? 'Notre processus' : 'Our process'}</a>
-        </div>
-        <ul class="checks">
-          <li>{fr ? 'Évaluation gratuite sur place' : 'Free on-site assessment'}</li>
-          <li>{fr ? 'Service bilingue' : 'Bilingual service'}</li>
-          <li>{fr ? 'Résidentiel et commercial' : 'Residential and commercial'}</li>
-        </ul>
+      <p class="rule mono">{fr ? 'Films pour fenêtres · Grand Montréal' : 'Window film · Greater Montreal'}</p>
+      <h1>{fr ? 'Protégez' : 'Protect'} <b>{fr ? 'ce qui compte.' : 'what matters.'}</b></h1>
+      <p class="lede">{fr
+        ? "Films de sécurité, anti-graffiti, solaires et d'intimité pour les fenêtres des résidences et commerces du Grand Montréal."
+        : 'Security, anti-graffiti, solar and privacy film for the windows of homes and businesses across Greater Montreal.'}</p>
+      <div class="ctas">
+        <a class="btn btn-light" href={q}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="#films">{fr ? 'Voir les films' : 'See the films'}</a>
       </div>
-      <div class="panes" aria-hidden="true">
-        <div class="frame">
-          <FilmVisual visual="sec" />
-          <FilmVisual visual="sol" />
-          <FilmVisual visual="pri" />
-        </div>
-        <div class="pane-labels"><span>01 · {fr ? 'Sécurité' : 'Security'}</span><span>02 · {fr ? 'Solaire' : 'Solar'}</span><span>03 · {fr ? 'Intimité' : 'Privacy'}</span></div>
+      <ul class="checks">
+        <li>{fr ? 'Installateur certifié XPEL' : 'XPEL-certified installer'}</li>
+        <li>{fr ? 'Évaluation gratuite sur place' : 'Free on-site assessment'}</li>
+        <li>{fr ? 'Service bilingue' : 'Bilingual service'}</li>
+      </ul>
+    </div>
+    <div class="phero-meta mono" aria-hidden="true">
+      <span>45.50° N · 73.57° {fr ? 'O' : 'W'}</span>
+      <span>Montréal · Laval · Rive-Sud · Rive-Nord</span>
+    </div>
+  </section>
+
+  <section class="section paper">
+    <div class="wrap intro">
+      <p class="statement">{fr
+        ? <>Un film mince, posé directement sur <b>vos fenêtres existantes.</b> Plus de sécurité, moins de chaleur, plus d'intimité, sans changer une seule vitre.</>
+        : <>A thin film applied directly to <b>your existing windows.</b> More security, less heat, more privacy, without replacing a single pane.</>}</p>
+      <figure class="cut">
+        <svg viewBox="0 0 420 230" role="img" aria-label={fr ? 'Coupe d’une fenêtre : verre existant, adhésif, film' : 'Window cross-section: existing glass, adhesive, film'}>
+          <g font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="1.2" fill="#4E5A65">
+            <text x="20" y="22">{fr ? 'EXTÉRIEUR' : 'OUTSIDE'}</text>
+            <text x="400" y="22" text-anchor="end">{fr ? 'INTÉRIEUR' : 'INSIDE'}</text>
+          </g>
+          <rect x="150" y="40" width="64" height="150" fill="#DCE6EC" stroke="#121A21" stroke-width="1.2"/>
+          <g stroke="#9FB3C1" stroke-width=".8"><path d="M160 60 L204 104"/><path d="M160 92 L204 136"/><path d="M160 124 L204 168"/></g>
+          <rect x="214" y="40" width="5" height="150" fill="#F2C978"/>
+          <rect x="219" y="40" width="10" height="150" fill="#A9D1E8" stroke="#1F5E85" stroke-width="1.2"/>
+          <g stroke="#121A21" stroke-width=".8" fill="none">
+            <path d="M182 190 V206 H120"/><path d="M216 40 V28 H260"/><path d="M224 190 V214 H290"/>
+          </g>
+          <g font-family="Inter, sans-serif" font-size="12" fill="#121A21">
+            <text x="20" y="210">{fr ? 'Verre existant' : 'Existing glass'}</text>
+            <text x="266" y="32">{fr ? 'Adhésif' : 'Adhesive'}</text>
+            <text x="296" y="218" font-weight="700">{fr ? 'Film ClearShield' : 'ClearShield film'}</text>
+          </g>
+          <g stroke="#121A21" stroke-width=".8"><path d="M40 115 H140"/><path d="M134 110 L140 115 L134 120"/></g>
+          <text x="40" y="106" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1" fill="#4E5A65">{fr ? 'IMPACT · SOLEIL · REGARDS' : 'IMPACT · SUN · EYES'}</text>
+        </svg>
+        <figcaption class="mono"><span>{fr ? 'Fig. 00 — Coupe' : 'Fig. 00 — Section'}</span><span>{fr ? 'Schéma, non à l’échelle' : 'Diagram, not to scale'}</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="films">
+    <span id="services"></span>
+    <div class="wrap">
+      <div class="stitle">
+        <span class="mono">{fr ? 'Nos films — 4 solutions' : 'Our films — 4 solutions'}</span>
+        <h2>{fr ? <>Quatre solutions. <b>Un seul standard.</b></> : <>Four solutions. <b>One standard.</b></>}</h2>
+        <p>{fr ? 'Chaque film a sa propre page, avec ses usages, ses finis et les questions fréquentes.' : 'Each film has its own page, with uses, finishes and common questions.'}</p>
+      </div>
+      <div class="frows">
+        {filmOrder.map((k, i) => {
+          const f = films[k];
+          const ph = filmPhoto[k];
+          return (
+            <article class="frow">
+              <a class="fmedia" href={routes[k][lang]} tabindex="-1" aria-hidden="true">
+                <div class="ph">
+                  {ph
+                    ? <Image src={ph.src} alt="" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 58vw" style={`object-position:${ph.position}`} />
+                    : <FilmVisual visual={f.visual} />}
+                </div>
+                <figcaption class="mono"><span>Fig. 0{i + 1} — {f.kicker[lang]}</span><span>{ph ? (fr ? 'Photo d’illustration' : 'Illustrative photo') : (fr ? 'Photo à venir' : 'Photo to come')}</span></figcaption>
+              </a>
+              <div class="ftext">
+                <span class="idx" aria-hidden="true">0{i + 1}</span>
+                <h3>{f.name[lang]} <b>{f.tail[lang]}</b></h3>
+                <p>{f.short[lang]}</p>
+                <ul class="specs">{f.benefits[lang].map((b) => <li>{b}</li>)}</ul>
+                <a class="arrow-link" href={routes[k][lang]}>{fr ? `Découvrir le ${f.name[lang].toLowerCase()}` : `Explore ${f.name[lang].toLowerCase()}`} <span aria-hidden="true">→</span></a>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </div>
   </section>
 
-  <section class="trust" aria-label={fr ? 'Nos engagements' : 'Our commitments'}>
-    <ul class="wrap">
-      <li><strong>{fr ? 'Installateur certifié XPEL' : 'XPEL-certified installer'}</strong><span>{fr ? 'Films architecturaux haut de gamme' : 'Premium architectural films'}</span></li>
-      <li><strong>{fr ? "5 ans d'expérience" : '5 years of experience'}</strong><span>{fr ? 'Résidentiel et commercial' : 'Residential and commercial'}</span></li>
-      <li><strong>{fr ? 'Évaluation gratuite sur place' : 'Free on-site assessment'}</strong><span>{fr ? 'On se déplace et on mesure, sans engagement' : 'We come to you and measure, no obligation'}</span></li>
-      <li><strong>{fr ? 'Service bilingue' : 'Bilingual service'}</strong><span>{fr ? 'Français et anglais' : 'French and English'}</span></li>
-    </ul>
-  </section>
-
-  <section class="section" id="segments">
+  <section class="section paper" id="segments">
     <div class="wrap">
-      <div class="head"><div>
-        <span class="eyebrow">{fr ? 'Pour qui' : "Who it's for"}</span>
-        <h2 class="big">{fr ? 'Commerce ou maison, le bon film pour vos vitres.' : 'Business or home, the right film for your glass.'}</h2>
-      </div></div>
-      <div class="seg-grid">
-        {[segments.commercial, segments.residential].map((s, i) => (
-          <a class:list={['seg', i === 0 ? 'seg-dark' : 'seg-light']} href={routes[s.key][lang]}>
-            <span class="k">{s.kicker[lang]}</span>
+      <div class="stitle">
+        <span class="mono">{fr ? 'Pour qui' : "Who it's for"}</span>
+        <h2>{fr ? <>Commerce ou maison, <b>le bon film pour vos vitres.</b></> : <>Business or home, <b>the right film for your glass.</b></>}</h2>
+      </div>
+      <div class="tiles">
+        {[{ s: segments.commercial, img: photos.brise }, { s: segments.residential, img: photos.salon }].map(({ s, img }) => (
+          <a class="tile" href={routes[s.key][lang]}>
+            <Image src={img.src} alt="" widths={[480, 800, 1200]} sizes="(max-width: 760px) 100vw, 50vw" style={`object-position:${img.position}`} />
+            <span class="mono">{s.kicker[lang]}</span>
             <span class="t">{s.title[lang]}</span>
             <span class="d">{s.body[lang]}</span>
             <span class="pills">{s.tags[lang].map((x) => <span class="pill">{x}</span>)}</span>
-            <span class="go">{fr ? (i === 0 ? 'Solutions commerciales' : 'Solutions résidentielles') : (i === 0 ? 'Commercial solutions' : 'Residential solutions')} <span aria-hidden="true">→</span></span>
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="section" id="films" style="padding-top:0">
-    <span id="services"></span>
-    <div class="wrap">
-      <div class="head">
-        <div>
-          <span class="eyebrow">{fr ? 'Nos films' : 'Our films'}</span>
-          <h2 class="big">{fr ? 'Quatre solutions. Un seul standard.' : 'Four solutions. One standard.'}</h2>
-        </div>
-        <p>{fr ? 'Choisissez une solution pour en savoir plus.' : 'Pick a solution to learn more.'}</p>
-      </div>
-      <div class="films">
-        {filmOrder.map((k) => <FilmCard film={k} lang={lang} />)}
-      </div>
-    </div>
-  </section>
-
   <section class="section dark" id="processus">
     <div class="wrap">
-      <div class="head">
-        <div>
-          <span class="eyebrow">{fr ? 'Avant chaque soumission' : 'Before every quote'}</span>
-          <h2 class="big">{fr ? "Rien n'est laissé au hasard." : 'Nothing is left to chance.'}</h2>
-        </div>
+      <div class="stitle">
+        <span class="mono">{fr ? 'Avant chaque soumission' : 'Before every quote'}</span>
+        <h2>{fr ? <>Rien n'est laissé <b>au hasard.</b></> : <>Nothing is left <b>to chance.</b></>}</h2>
         <p>{fr ? 'Quatre étapes, toujours dans le même ordre, avant de vous remettre un prix.' : 'Four steps, always in the same order, before we give you a price.'}</p>
       </div>
-      <ol class="steps">
+      <ol class="proc">
         {steps.map((s, i) => (
           <li class:list={{ key: i === 2 }}>
             <span class="n">0{i + 1}</span>
+            {i === 2 && <span class="flag">{fr ? "L'étape que d'autres sautent" : 'The step others skip'}</span>}
             <span class="t">{s.title[lang]}</span>
             <span class="s">{s.sub[lang]}</span>
             <span class="d">{s.body[lang]}</span>
           </li>
         ))}
       </ol>
-      <div class="ctas" style="margin-top:36px"><a class="btn btn-light" href={routes.quote[lang]}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a></div>
     </div>
   </section>
 
   <section class="section paper" id="pourquoi">
     <div class="wrap">
-      <div class="head">
-        <div>
-          <span class="eyebrow">{fr ? 'Pourquoi ClearShield' : 'Why ClearShield'}</span>
-          <h2 class="big">{fr ? 'Le souci du détail, vitre après vitre.' : 'Obsessed with detail, pane after pane.'}</h2>
-        </div>
+      <div class="stitle">
+        <span class="mono">{fr ? 'Pourquoi ClearShield' : 'Why ClearShield'}</span>
+        <h2>{fr ? <>Le souci du détail, <b>vitre après vitre.</b></> : <>Obsessed with detail, <b>pane after pane.</b></>}</h2>
         <p>{fr ? 'Des films haut de gamme, posés avec rigueur par une équipe certifiée.' : 'Premium films, installed with care by a certified team.'}</p>
       </div>
-      <ul class="why">
-        {whyUs.map((w) => <li><b>{w.title[lang]}</b><span>{w.body[lang]}</span></li>)}
-      </ul>
+      <div class="sheet">
+        {whyUs.map((w, i) => <div><span class="mono">0{i + 1}</span><b>{w.title[lang]}</b><span>{w.body[lang]}</span></div>)}
+      </div>
     </div>
   </section>
 
-  <QuoteBand lang={lang} id="contact" />
+  <section class="qphoto" id="contact">
+    <Image src={photos.soleil.src} alt="" widths={[800, 1600]} sizes="100vw" class="bg" style="object-position:50% 40%" />
+    <div class="wrap">
+      <div style="flex:1 1 420px;min-width:0">
+        <span class="mono" style="color:var(--ice)">{fr ? 'Soumission gratuite' : 'Free quote'}</span>
+        <h2 style="margin-top:16px">{fr ? <>Parlons de <b>votre projet.</b></> : <>Let's talk about <b>your project.</b></>}</h2>
+        <p>{fr
+          ? "Décrivez vos fenêtres, ajoutez des photos si vous en avez, et on vous rappelle rapidement pour planifier l'évaluation gratuite sur place."
+          : "Describe your windows, add photos if you have some, and we'll call you back quickly to book your free on-site assessment."}</p>
+      </div>
+      <div class="qcard">
+        <b>{fr ? 'Votre projet est…' : 'Your project is…'}</b>
+        <div class="opts">
+          <a href={`${q}?type=commercial`}>Commercial</a>
+          <a href={`${q}?type=residentiel`}>{fr ? 'Résidentiel' : 'Residential'}</a>
+        </div>
+        <small>{fr ? '4 étapes · environ 2 minutes · sans engagement' : '4 steps · about 2 minutes · no obligation'}</small>
+      </div>
+    </div>
+  </section>
 </Base>

@@ -1,12 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
 import FilmVisual from './FilmVisual.astro';
+import { filmPhoto } from '../data/photos';
 import { SITE_URL, films, filmOrder, routes, type FilmKey, type Lang } from '../data/site';
 interface Props { lang: Lang; film: FilmKey }
 const { lang, film } = Astro.props;
 const fr = lang === 'fr';
 const f = films[film];
 const others = filmOrder.filter((k) => k !== film);
+const ph = filmPhoto[film];
 const quoteHref = `${routes.quote[lang]}?film=${f.formValue}`;
 
 const jsonLd = [
@@ -33,44 +36,37 @@ const jsonLd = [
     mainEntity: f.faq.map((x) => ({ '@type': 'Question', name: x.q[lang], acceptedAnswer: { '@type': 'Answer', text: x.a[lang] } })),
   },
 ];
-const icons = [
-  '<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 12L7 6M12 12L17 8M12 12L16 18M12 12L7 17"/>',
-  '<path d="M12 3L20 6V12C20 17 16.5 20 12 21.5C7.5 20 4 17 4 12V6Z"/><path d="M9 12L11 14L15 10"/>',
-  '<path d="M2 12C5 6 9 4 12 4C15 4 19 6 22 12C19 18 15 20 12 20C9 20 5 18 2 12Z"/><circle cx="12" cy="12" r="3"/>',
-  '<circle cx="12" cy="12" r="4"/><path d="M12 2V5M12 19V22M2 12H5M19 12H22M4.9 4.9L7 7M17 17L19.1 19.1M4.9 19.1L7 17M17 7L19.1 4.9"/>',
-];
 ---
 <Base lang={lang} route={film} title={f.metaTitle[lang]} description={f.metaDescription[lang]} jsonLd={jsonLd}>
-  <section class="page-hero dark">
+  <section class="phero short">
+    {ph
+      ? <Image src={ph.src} alt="" widths={[640, 1024, 1600, 2400]} sizes="100vw" class="bg" loading="eager" fetchpriority="high" style={`object-position:${ph.position}`} />
+      : <FilmVisual visual={f.visual} class="bg" />}
+    <span class="reg tl" aria-hidden="true"></span><span class="reg tr" aria-hidden="true"></span>
+    <ol class="crumb mono" aria-label={fr ? "Fil d'Ariane" : 'Breadcrumb'}>
+      <li><a href={routes.home[lang]}>{fr ? 'Accueil' : 'Home'}</a></li>
+      <li><a href={`${routes.home[lang]}#films`}>{fr ? 'Films' : 'Window films'}</a></li>
+      <li aria-current="page">{f.kicker[lang]}</li>
+    </ol>
     <div class="wrap">
-      <ol class="crumb" aria-label={fr ? "Fil d'Ariane" : 'Breadcrumb'}>
-        <li><a href={routes.home[lang]}>{fr ? 'Accueil' : 'Home'}</a></li>
-        <li><a href={`${routes.home[lang]}#films`}>{fr ? 'Films' : 'Window films'}</a></li>
-        <li aria-current="page">{f.name[lang]}</li>
-      </ol>
-      <div class="page-row">
-        <div class="copy">
-          <span class="eyebrow">{f.kicker[lang]} · {fr ? 'Grand Montréal' : 'Greater Montreal'}</span>
-          <h1>{f.name[lang]} <span>{f.tail[lang]}</span></h1>
-          <p class="lede">{f.lede[lang]}</p>
-          <div class="ctas">
-            <a class="btn btn-light" href={quoteHref}>{fr ? 'Soumission pour ce film' : 'Get a quote for this film'} <span aria-hidden="true">→</span></a>
-          </div>
-        </div>
-        <FilmVisual visual={f.visual} class="page-visual" />
+      <p class="rule mono">{f.kicker[lang]} · {fr ? 'Grand Montréal' : 'Greater Montreal'}</p>
+      <h1>{f.name[lang]} <b>{f.tail[lang]}</b></h1>
+      <p class="lede">{f.lede[lang]}</p>
+      <div class="ctas">
+        <a class="btn btn-light" href={quoteHref}>{fr ? 'Soumission pour ce film' : 'Get a quote for this film'} <span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="tel:+15147759418">514-775-9418</a>
       </div>
     </div>
   </section>
 
   <section class="section paper">
     <div class="wrap">
-      <div class="head"><div>
-        <h2 class="big">{fr ? 'Ce que ce film fait pour vous' : 'What this film does for you'}</h2>
-      </div></div>
-      <ul class="benefits">
-        {f.benefits[lang].map((b, i) => (
-          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#1F5E85" stroke-width="1.8" set:html={icons[i % icons.length]} />{b}</li>
-        ))}
+      <div class="stitle">
+        <span class="mono">{f.kicker[lang]} — {fr ? 'Avantages' : 'Benefits'}</span>
+        <h2>{fr ? <>Ce que ce film <b>fait pour vous.</b></> : <>What this film <b>does for you.</b></>}</h2>
+      </div>
+      <ul class="specs big-specs">
+        {f.benefits[lang].map((b) => <li>{b}</li>)}
       </ul>
       {f.idealFor && (
         <div class="ideal"><b>{fr ? 'Idéal pour' : 'Ideal for'}</b>{f.idealFor[lang].map((x) => <span class="pill">{x}</span>)}</div>

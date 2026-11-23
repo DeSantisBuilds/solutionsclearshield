@@ -1,12 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
 import FilmCard from './FilmCard.astro';
+import { photos } from '../data/photos';
 import QuoteBand from './QuoteBand.astro';
 import { SITE_URL, routes, segments, steps, type Lang } from '../data/site';
 interface Props { lang: Lang; segment: 'commercial' | 'residential' }
 const { lang, segment } = Astro.props;
 const fr = lang === 'fr';
 const s = segments[segment];
+const img = segment === 'commercial' ? photos.brise : photos.salon;
 const typeValue = segment === 'commercial' ? 'commercial' : 'residentiel';
 const jsonLd = [{
   '@context': 'https://schema.org',
@@ -18,21 +21,18 @@ const jsonLd = [{
 }];
 ---
 <Base lang={lang} route={segment} title={s.metaTitle[lang]} description={s.metaDescription[lang]} jsonLd={jsonLd}>
-  <section class="page-hero dark">
+  <section class="phero short">
+    <Image src={img.src} alt="" widths={[640, 1024, 1600, 2400]} sizes="100vw" class="bg" loading="eager" fetchpriority="high" style={`object-position:${img.position}`} />
+    <span class="reg tl" aria-hidden="true"></span><span class="reg tr" aria-hidden="true"></span>
+    <ol class="crumb mono" aria-label={fr ? "Fil d'Ariane" : 'Breadcrumb'}>
+      <li><a href={routes.home[lang]}>{fr ? 'Accueil' : 'Home'}</a></li>
+      <li aria-current="page">{s.kicker[lang]}</li>
+    </ol>
     <div class="wrap">
-      <ol class="crumb" aria-label={fr ? "Fil d'Ariane" : 'Breadcrumb'}>
-        <li><a href={routes.home[lang]}>{fr ? 'Accueil' : 'Home'}</a></li>
-        <li aria-current="page">{s.kicker[lang]}</li>
-      </ol>
-      <div class="page-row">
-        <div class="copy">
-          <span class="eyebrow">{s.kicker[lang]} · {fr ? 'Grand Montréal' : 'Greater Montreal'}</span>
-          <h1>{s.title[lang]}</h1>
-          <p class="lede">{s.body[lang]}</p>
-          <div class="pills">{s.tags[lang].map((x) => <span class="pill">{x}</span>)}</div>
-          <div class="ctas"><a class="btn btn-light" href={`${routes.quote[lang]}?type=${typeValue}`}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a></div>
-        </div>
-      </div>
+      <p class="rule mono">{s.kicker[lang]} · {fr ? 'Grand Montréal' : 'Greater Montreal'}</p>
+      <h1>{s.title[lang]}</h1>
+      <p class="lede">{s.body[lang]}</p>
+      <div class="ctas"><a class="btn btn-light" href={`${routes.quote[lang]}?type=${typeValue}`}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a></div>
     </div>
   </section>
 
