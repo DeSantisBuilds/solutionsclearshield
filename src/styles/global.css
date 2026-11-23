@@ -433,3 +433,6 @@ footer.site .bottom a{text-decoration:underline;text-underline-offset:3px}
 .big-specs li{font-family:var(--display);font-size:clamp(19px,2vw,24px);font-weight:300;padding:18px 0;letter-spacing:-.01em}
 .big-specs li::before{width:10px;height:10px}
 @media (max-width:640px){.phero .rule::before{width:28px} .phero .rule{align-items:flex-start} .phero .rule::before{margin-top:8px;flex:none}}
+.logo-img{display:block;height:40px;width:auto}
+footer.site .logo-img{height:36px}
+@media (max-width:640px){header.site .logo-img{height:34px}}
