@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { business, routes, type Lang } from '../data/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+---
+<Base lang={lang} route="thanks" noindex
+  title={fr ? 'Merci | Solutions ClearShield' : 'Thank you | Solutions ClearShield'}
+  description={fr ? 'Votre demande de soumission a été reçue.' : 'Your quote request was received.'}>
+  <section class="dark">
+    <div class="wrap">
+      <div class="done">
+        <svg aria-hidden="true" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#A9D1E8" stroke-width="1.8"><path d="M12 3L20 6V12C20 17 16.5 20 12 21.5C7.5 20 4 17 4 12V6Z"/><path d="M8.5 12L11 14.5L15.5 10"/></svg>
+        <h1>{fr ? "Merci, c'est reçu!" : 'Thanks, we got it!'}</h1>
+        <p>{fr ? 'Un membre de notre équipe vous rappelle rapidement pour planifier votre évaluation gratuite sur place.' : 'A member of our team will call you back shortly to book your free on-site assessment.'}</p>
+        <p>{fr ? 'Une question en attendant? Appelez-nous au ' : 'A question in the meantime? Call us at '}<a href={business.phoneHref} style="color:var(--ice)">{business.phone}</a>.</p>
+        <div class="ctas"><a class="btn btn-ghost" href={routes.home[lang]}>{fr ? "Retour à l'accueil" : 'Back to home'}</a></div>
+      </div>
+    </div>
+  </section>
+  <script is:inline>
+    // Conversion event for Google and Meta once those tags are added (they only load with consent).
+    try { (window.dataLayer = window.dataLayer || []).push({ event: 'generate_lead' }); } catch (e) {}
+  </script>
+</Base>

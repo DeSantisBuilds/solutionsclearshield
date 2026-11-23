@@ -1,0 +1,142 @@
+---
+import Base from '../layouts/Base.astro';
+import FilmCard from './FilmCard.astro';
+import FilmVisual from './FilmVisual.astro';
+import QuoteBand from './QuoteBand.astro';
+import { filmOrder, routes, segments, steps, whyUs, type Lang } from '../data/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const title = fr ? 'Films pour fenêtres à Montréal | Solutions ClearShield' : 'Window Film in Montreal | Solutions ClearShield';
+const description = fr
+  ? "Film de sécurité, anti-graffiti, solaire et d'intimité pour maisons et commerces du Grand Montréal. Installateur certifié XPEL. Évaluation gratuite sur place."
+  : 'Security, anti-graffiti, solar and privacy window film for homes and businesses across Greater Montreal. XPEL-certified installer. Free on-site assessment.';
+---
+<Base lang={lang} route="home" title={title} description={description}>
+  {fr && (
+    <script is:inline slot="head">
+      (function(){
+        // Keep old GoHighLevel links working: ?lang=en, #confidentialite, #conditions
+        var q = location.search, h = location.hash;
+        if (/[?&]lang=en\b/.test(q)) { location.replace('/en/' + h); return; }
+        if (h === '#confidentialite') location.replace('/confidentialite/');
+        else if (h === '#conditions') location.replace('/conditions/');
+        else if (h === '#services') history.replaceState(null, '', '#films');
+      })();
+    </script>
+  )}
+
+  <section class="hero dark">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">{fr ? 'Films pour fenêtres · Grand Montréal' : 'Window film · Greater Montreal'}</span>
+        <h1>{fr ? 'Protégez' : 'Protect'} <span>{fr ? 'ce qui compte.' : 'what matters.'}</span></h1>
+        <p class="lede">{fr
+          ? "Films de sécurité, anti-graffiti, solaires et d'intimité pour les fenêtres des résidences et commerces du Grand Montréal."
+          : 'Security, anti-graffiti, solar and privacy film for the windows of homes and businesses across Greater Montreal.'}</p>
+        <div class="ctas">
+          <a class="btn btn-light" href={routes.quote[lang]}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a>
+          <a class="btn btn-ghost" href="#processus">{fr ? 'Notre processus' : 'Our process'}</a>
+        </div>
+        <ul class="checks">
+          <li>{fr ? 'Évaluation gratuite sur place' : 'Free on-site assessment'}</li>
+          <li>{fr ? 'Service bilingue' : 'Bilingual service'}</li>
+          <li>{fr ? 'Résidentiel et commercial' : 'Residential and commercial'}</li>
+        </ul>
+      </div>
+      <div class="panes" aria-hidden="true">
+        <div class="frame">
+          <FilmVisual visual="sec" />
+          <FilmVisual visual="sol" />
+          <FilmVisual visual="pri" />
+        </div>
+        <div class="pane-labels"><span>01 · {fr ? 'Sécurité' : 'Security'}</span><span>02 · {fr ? 'Solaire' : 'Solar'}</span><span>03 · {fr ? 'Intimité' : 'Privacy'}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust" aria-label={fr ? 'Nos engagements' : 'Our commitments'}>
+    <ul class="wrap">
+      <li><strong>{fr ? 'Installateur certifié XPEL' : 'XPEL-certified installer'}</strong><span>{fr ? 'Films architecturaux haut de gamme' : 'Premium architectural films'}</span></li>
+      <li><strong>{fr ? "5 ans d'expérience" : '5 years of experience'}</strong><span>{fr ? 'Résidentiel et commercial' : 'Residential and commercial'}</span></li>
+      <li><strong>{fr ? 'Évaluation gratuite sur place' : 'Free on-site assessment'}</strong><span>{fr ? 'On se déplace et on mesure, sans engagement' : 'We come to you and measure, no obligation'}</span></li>
+      <li><strong>{fr ? 'Service bilingue' : 'Bilingual service'}</strong><span>{fr ? 'Français et anglais' : 'French and English'}</span></li>
+    </ul>
+  </section>
+
+  <section class="section" id="segments">
+    <div class="wrap">
+      <div class="head"><div>
+        <span class="eyebrow">{fr ? 'Pour qui' : "Who it's for"}</span>
+        <h2 class="big">{fr ? 'Commerce ou maison, le bon film pour vos vitres.' : 'Business or home, the right film for your glass.'}</h2>
+      </div></div>
+      <div class="seg-grid">
+        {[segments.commercial, segments.residential].map((s, i) => (
+          <a class:list={['seg', i === 0 ? 'seg-dark' : 'seg-light']} href={routes[s.key][lang]}>
+            <span class="k">{s.kicker[lang]}</span>
+            <span class="t">{s.title[lang]}</span>
+            <span class="d">{s.body[lang]}</span>
+            <span class="pills">{s.tags[lang].map((x) => <span class="pill">{x}</span>)}</span>
+            <span class="go">{fr ? (i === 0 ? 'Solutions commerciales' : 'Solutions résidentielles') : (i === 0 ? 'Commercial solutions' : 'Residential solutions')} <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="films" style="padding-top:0">
+    <span id="services"></span>
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">{fr ? 'Nos films' : 'Our films'}</span>
+          <h2 class="big">{fr ? 'Quatre solutions. Un seul standard.' : 'Four solutions. One standard.'}</h2>
+        </div>
+        <p>{fr ? 'Choisissez une solution pour en savoir plus.' : 'Pick a solution to learn more.'}</p>
+      </div>
+      <div class="films">
+        {filmOrder.map((k) => <FilmCard film={k} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark" id="processus">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">{fr ? 'Avant chaque soumission' : 'Before every quote'}</span>
+          <h2 class="big">{fr ? "Rien n'est laissé au hasard." : 'Nothing is left to chance.'}</h2>
+        </div>
+        <p>{fr ? 'Quatre étapes, toujours dans le même ordre, avant de vous remettre un prix.' : 'Four steps, always in the same order, before we give you a price.'}</p>
+      </div>
+      <ol class="steps">
+        {steps.map((s, i) => (
+          <li class:list={{ key: i === 2 }}>
+            <span class="n">0{i + 1}</span>
+            <span class="t">{s.title[lang]}</span>
+            <span class="s">{s.sub[lang]}</span>
+            <span class="d">{s.body[lang]}</span>
+          </li>
+        ))}
+      </ol>
+      <div class="ctas" style="margin-top:36px"><a class="btn btn-light" href={routes.quote[lang]}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
+
+  <section class="section paper" id="pourquoi">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">{fr ? 'Pourquoi ClearShield' : 'Why ClearShield'}</span>
+          <h2 class="big">{fr ? 'Le souci du détail, vitre après vitre.' : 'Obsessed with detail, pane after pane.'}</h2>
+        </div>
+        <p>{fr ? 'Des films haut de gamme, posés avec rigueur par une équipe certifiée.' : 'Premium films, installed with care by a certified team.'}</p>
+      </div>
+      <ul class="why">
+        {whyUs.map((w) => <li><b>{w.title[lang]}</b><span>{w.body[lang]}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <QuoteBand lang={lang} id="contact" />
+</Base>

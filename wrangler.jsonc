@@ -1,0 +1,23 @@
+// Cloudflare Worker for solutionsclearshield.com.
+// `npx wrangler deploy` (the deploy command in Cloudflare) runs `npm run build`
+// first, then publishes the files in ./dist plus the small API in ./worker.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "solutionsclearshield",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-15",
+  "build": { "command": "npm run build" },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    // Where quote requests go. The GoHighLevel webhook address is a secret:
+    // add it in Cloudflare > Worker > Settings > Variables and Secrets as GHL_WEBHOOK_URL.
+    "MAX_PHOTOS": "10"
+  }
+  // Photos: once the R2 bucket exists (see README), uncomment this block.
+  // ,"r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "solutionsclearshield-photos" }]
+}

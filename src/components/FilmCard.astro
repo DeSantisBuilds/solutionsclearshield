@@ -1,0 +1,15 @@
+---
+import FilmVisual from './FilmVisual.astro';
+import { films, routes, type FilmKey, type Lang } from '../data/site';
+interface Props { film: FilmKey; lang: Lang }
+const { film, lang } = Astro.props;
+const f = films[film];
+---
+<a class="film" href={routes[film][lang]}>
+  <FilmVisual visual={f.visual} class="img" />
+  <span class="body">
+    <span class="t">{f.name[lang]} {f.tail[lang]}</span>
+    <span class="d">{f.short[lang]}</span>
+    <span class="go">{lang === 'fr' ? 'En savoir plus' : 'Learn more'} <span aria-hidden="true">→</span></span>
+  </span>
+</a>

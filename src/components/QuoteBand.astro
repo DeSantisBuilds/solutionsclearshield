@@ -1,0 +1,26 @@
+---
+import { routes, type Lang } from '../data/site';
+interface Props { lang: Lang; id?: string }
+const { lang, id } = Astro.props;
+const fr = lang === 'fr';
+const q = routes.quote[lang];
+---
+<section class="qband haze" id={id}>
+  <div class="wrap">
+    <div class="copy">
+      <span class="eyebrow">{fr ? 'Soumission gratuite' : 'Free quote'}</span>
+      <h2 class="big">{fr ? 'Parlons de votre projet.' : "Let's talk about your project."}</h2>
+      <p>{fr
+        ? "Décrivez vos fenêtres, ajoutez des photos si vous en avez, et on vous rappelle rapidement pour planifier l'évaluation gratuite sur place."
+        : "Describe your windows, add photos if you have some, and we'll call you back quickly to book your free on-site assessment."}</p>
+    </div>
+    <div class="qcard">
+      <b>{fr ? 'Votre projet est…' : 'Your project is…'}</b>
+      <div class="opts">
+        <a href={`${q}?type=commercial`}>{fr ? 'Commercial' : 'Commercial'}</a>
+        <a href={`${q}?type=residentiel`}>{fr ? 'Résidentiel' : 'Residential'}</a>
+      </div>
+      <small>{fr ? '4 étapes · environ 2 minutes · sans engagement' : '4 steps · about 2 minutes · no obligation'}</small>
+    </div>
+  </div>
+</section>

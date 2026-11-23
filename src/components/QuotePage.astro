@@ -1,0 +1,195 @@
+---
+import Base from '../layouts/Base.astro';
+import { business, business as b, filmOrder, films, routes, type Lang } from '../data/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const L = fr
+  ? {
+      title: 'Soumission gratuite pour films de fenêtres | Solutions ClearShield',
+      desc: "Demandez une soumission gratuite pour un film de sécurité, anti-graffiti, solaire ou d'intimité. Ajoutez vos mesures et vos photos. Grand Montréal.",
+      kicker: 'Soumission gratuite',
+      steps: ['Projet', 'Fenêtres', 'Photos', 'Coordonnées'],
+      headings: ['Parlez-nous de votre projet', 'Vos fenêtres', 'Des photos? (facultatif)', 'Comment vous joindre'],
+      type: 'Type de bâtiment', commercial: 'Commercial', commercialD: 'Vitrine, bureau, commerce, façade', residential: 'Résidentiel', residentialD: 'Maison, condo, porte-patio',
+      films: 'Quel(s) film(s) vous intéresse(nt)?', many: 'Plusieurs choix possibles', unsure: 'Je ne sais pas encore',
+      details: 'Ce que vous voulez régler', detailsPh: 'Ex. : vitrine de 4 grandes vitres, on veut un film de sécurité…',
+      approx: "Des mesures approximatives suffisent. On mesure chaque fenêtre avec précision lors de la visite gratuite. Vous pouvez aussi passer cette étape.",
+      units: 'Unités', inches: 'pouces', in: 'po', loc: 'Emplacement', locPh: 'Ex. : vitrine avant', width: 'Largeur', height: 'Hauteur', qty: 'Qté', glass: 'Type de verre',
+      glassOpts: ['Je ne sais pas', 'Simple', 'Double (thermos)', 'Triple'], remove: 'Retirer cette fenêtre', add: '+ Ajouter une fenêtre',
+      photosT: 'Ajoutez des photos de vos fenêtres', photosD: "Glissez vos fichiers ici, ou touchez pour choisir ou prendre une photo · jusqu'à 10 photos",
+      photosNote: 'Facultatif. Les photos nous aident à préparer la visite. Elles sont conservées de façon privée et utilisées seulement pour votre projet.',
+      name: 'Nom complet', email: 'Courriel', phone: 'Téléphone', city: 'Ville ou région', other: 'Autre', address: 'Adresse du projet', optional: '(facultatif)',
+      pref: 'On vous joint de préférence par', prefs: ['Téléphone', 'Texto', 'Courriel'],
+      consent: "J'accepte que Solutions ClearShield me joigne par téléphone, courriel ou texto au sujet de ma demande.",
+      marketing: "J'aimerais recevoir des nouvelles et des offres de ClearShield. (facultatif)",
+      policy: 'Voir notre', policyLink: 'politique de confidentialité',
+      prev: '← Précédent', next: 'Continuer →', send: 'Envoyer ma demande', sending: 'Envoi en cours…',
+      nextT: 'Ce qui se passe ensuite', nextSteps: ['On vous rappelle pour cerner vos objectifs.', 'On se déplace et on mesure, gratuitement.', 'On vérifie la compatibilité de votre verre.', 'Vous recevez une soumission détaillée par courriel.'],
+      talk: "Vous préférez parler à quelqu'un?", bilingual: 'Service en français et en anglais',
+    }
+  : {
+      title: 'Free Window Film Quote | Solutions ClearShield',
+      desc: 'Request a free quote for security, anti-graffiti, solar or privacy window film. Add your measurements and photos. Greater Montreal.',
+      kicker: 'Free quote',
+      steps: ['Project', 'Windows', 'Photos', 'Contact'],
+      headings: ['Tell us about your project', 'Your windows', 'Any photos? (optional)', 'How to reach you'],
+      type: 'Type of building', commercial: 'Commercial', commercialD: 'Storefront, office, business, façade', residential: 'Residential', residentialD: 'Home, condo, patio door',
+      films: 'Which film(s) are you interested in?', many: 'Choose as many as you like', unsure: "I'm not sure yet",
+      details: 'What you want to solve', detailsPh: 'E.g. storefront with 4 large panes, looking for security film…',
+      approx: "Rough measurements are fine. We measure every window precisely during the free visit. You can also skip this step.",
+      units: 'Units', inches: 'inches', in: 'in', loc: 'Location', locPh: 'E.g. front window', width: 'Width', height: 'Height', qty: 'Qty', glass: 'Glass type',
+      glassOpts: ["I don't know", 'Single', 'Double (thermos)', 'Triple'], remove: 'Remove this window', add: '+ Add a window',
+      photosT: 'Add photos of your windows', photosD: 'Drag files here, or tap to choose or take a photo · up to 10 photos',
+      photosNote: 'Optional. Photos help us prepare the visit. They are stored privately and used only for your project.',
+      name: 'Full name', email: 'Email', phone: 'Phone', city: 'City or region', other: 'Other', address: 'Project address', optional: '(optional)',
+      pref: 'Best way to reach you', prefs: ['Phone', 'Text message', 'Email'],
+      consent: 'I agree that Solutions ClearShield may contact me by phone, email or text message about my request.',
+      marketing: "I'd like to receive news and offers from ClearShield. (optional)",
+      policy: 'See our', policyLink: 'privacy policy',
+      prev: '← Back', next: 'Continue →', send: 'Send my request', sending: 'Sending…',
+      nextT: 'What happens next', nextSteps: ['We call you back to pin down your goals.', 'We come to you and measure, free of charge.', 'We check that your glass is compatible.', 'You receive a detailed quote by email.'],
+      talk: 'Prefer to talk to someone?', bilingual: 'Service in French and English',
+    };
+const prefValues = ['telephone', 'texto', 'courriel'];
+const glassValues = ['inconnu', 'simple', 'double', 'triple'];
+const messages = fr
+  ? {
+      needType: 'Choisissez le type de bâtiment.', needName: 'Inscrivez votre nom.', needContact: 'Inscrivez un numéro de téléphone ou un courriel pour qu’on puisse vous joindre.',
+      badEmail: 'Ce courriel ne semble pas valide. Vérifiez-le.', needConsent: 'Cochez la case de consentement pour envoyer la demande.',
+      tooMany: 'Maximum de 10 photos.', failed: 'La demande n’a pas pu être envoyée. Réessayez, ou appelez-nous au ' + b.phone + '.',
+      windowsSummary: (rows: number, panes: number) => `${rows} ligne(s) · ${panes} vitre(s) au total`,
+    }
+  : {
+      needType: 'Choose the type of building.', needName: 'Enter your name.', needContact: 'Enter a phone number or an email so we can reach you.',
+      badEmail: "This email doesn't look right. Please check it.", needConsent: 'Check the consent box to send your request.',
+      tooMany: 'Up to 10 photos.', failed: "Your request couldn't be sent. Try again, or call us at " + b.phone + '.',
+      windowsSummary: (rows: number, panes: number) => `${rows} row(s) · ${panes} pane(s) in total`,
+    };
+const clientText = {
+  needType: messages.needType, needName: messages.needName, needContact: messages.needContact, badEmail: messages.badEmail,
+  needConsent: messages.needConsent, tooMany: messages.tooMany, failed: messages.failed, next: L.next, send: L.send, sending: L.sending,
+  rows: fr ? 'ligne(s)' : 'row(s)', panes: fr ? 'vitre(s) au total' : 'pane(s) in total', remove: fr ? 'Retirer' : 'Remove',
+  thanks: routes.thanks[lang],
+};
+---
+<Base lang={lang} route="quote" title={L.title} description={L.desc} noMbar>
+  <div class="wrap qpage">
+    <form class="qform" id="quote" method="post" action="/api/quote" enctype="multipart/form-data" novalidate data-text={JSON.stringify(clientText)}>
+      <div class="qtop">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span class="eyebrow" style="font-size:12px" id="q-count">{L.kicker}</span>
+          <h1 id="q-title">{L.headings[0]}</h1>
+        </div>
+        <ol class="prog" id="q-prog" aria-hidden="true">{L.steps.map((s, i) => <li class:list={{ on: i === 0 }}>{s}</li>)}</ol>
+      </div>
+
+      <input type="hidden" name="lang" value={lang}>
+      <input type="hidden" name="page" value="">
+      <input type="hidden" name="referrer" value="">
+      <input type="hidden" name="utm" value="">
+      <input type="hidden" name="started" value="">
+      <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+      <fieldset class="qstep" data-step="1">
+        <legend>{L.headings[0]}</legend>
+        <fieldset class="group">
+          <legend>{L.type}</legend>
+          <div class="choice">
+            <label><input type="radio" name="type" value="commercial" required><b>{L.commercial}</b><small>{L.commercialD}</small></label>
+            <label><input type="radio" name="type" value="residentiel"><b>{L.residential}</b><small>{L.residentialD}</small></label>
+          </div>
+        </fieldset>
+        <fieldset class="group">
+          <legend>{L.films} <span>{L.many}</span></legend>
+          <div class="chips">
+            {filmOrder.map((k) => <label><input type="checkbox" name="films" value={films[k].formValue}>{films[k].name[lang]}</label>)}
+            <label><input type="checkbox" name="films" value="inconnu">{L.unsure}</label>
+          </div>
+        </fieldset>
+        <label class="field" for="q-details">{L.details} <span class="opt">{L.optional}</span>
+          <textarea id="q-details" name="details" rows="3" maxlength="3000" placeholder={L.detailsPh}></textarea>
+        </label>
+      </fieldset>
+
+      <fieldset class="qstep" data-step="2">
+        <legend>{L.headings[1]}</legend>
+        <p class="note">{L.approx}</p>
+        <fieldset class="units">
+          <legend>{L.units}</legend>
+          <label><input type="radio" name="unit" value="po" checked>{L.inches}</label>
+          <label><input type="radio" name="unit" value="cm">cm</label>
+        </fieldset>
+        <div class="wlist" id="q-rows">
+          {[0, 1].map(() => (
+            <div class="wrow">
+              <label class="loc">{L.loc}<input name="win_loc" maxlength="120" placeholder={L.locPh}></label>
+              <label>{L.width}<input class="num" name="win_w" inputmode="decimal" maxlength="10"></label>
+              <label>{L.height}<input class="num" name="win_h" inputmode="decimal" maxlength="10"></label>
+              <label>{L.qty}<input class="num" name="win_q" inputmode="numeric" maxlength="4" value="1"></label>
+              <label class="glass">{L.glass}<select name="win_glass">{L.glassOpts.map((o, i) => <option value={glassValues[i]}>{o}</option>)}</select></label>
+              <button type="button" class="rm" aria-label={L.remove} hidden>✕</button>
+            </div>
+          ))}
+        </div>
+        <button type="button" class="add" id="q-add" hidden>{L.add}</button>
+        <span class="sum" id="q-sum" aria-live="polite"></span>
+      </fieldset>
+
+      <fieldset class="qstep" data-step="3">
+        <legend>{L.headings[2]}</legend>
+        <label class="drop" id="q-drop" for="q-photos">
+          <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1F5E85" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M8 5L9.5 3H14.5L16 5"/></svg>
+          <b>{L.photosT}</b>
+          <small>{L.photosD}</small>
+          <input id="q-photos" name="photos" type="file" accept="image/*" multiple>
+        </label>
+        <ul class="thumbs" id="q-thumbs"></ul>
+        <p style="font-size:13px;color:var(--muted)">{L.photosNote}</p>
+      </fieldset>
+
+      <fieldset class="qstep" data-step="4">
+        <legend>{L.headings[3]}</legend>
+        <div class="grid2">
+          <label class="field" for="q-name">{L.name}<input id="q-name" name="name" autocomplete="name" required maxlength="120"></label>
+          <label class="field" for="q-phone">{L.phone}<input id="q-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="514-555-0123"></label>
+          <label class="field" for="q-email">{L.email}<input id="q-email" name="email" type="email" autocomplete="email" maxlength="160"></label>
+          <label class="field" for="q-city">{L.city}
+            <select id="q-city" name="city">{business.areas.map((a) => <option>{a}</option>)}<option value="autre">{L.other}</option></select>
+          </label>
+        </div>
+        <label class="field" for="q-address">{L.address} <span class="opt">{L.optional}</span><input id="q-address" name="address" autocomplete="street-address" maxlength="200"></label>
+        <fieldset class="group">
+          <legend>{L.pref}</legend>
+          <div class="radios">{L.prefs.map((p, i) => <label><input type="radio" name="contact_pref" value={prefValues[i]} checked={i === 0}>{p}</label>)}</div>
+        </fieldset>
+        <div class="consent">
+          <label><input type="checkbox" name="consent" value="oui" required>{L.consent}</label>
+          <label><input type="checkbox" name="marketing" value="oui">{L.marketing}</label>
+          <span>{L.policy} <a href={routes.privacy[lang]}>{L.policyLink}</a>.</span>
+        </div>
+      </fieldset>
+
+      <div class="qnav">
+        <p class="err" id="q-err" role="alert"></p>
+        <button type="button" class="btn btn-outline" id="q-prev" hidden>{L.prev}</button>
+        <span id="q-spacer"></span>
+        <button type="submit" class="btn btn-dark" id="q-next">{L.send}</button>
+      </div>
+    </form>
+
+    <aside class="qside">
+      <div class="next">
+        <b>{L.nextT}</b>
+        <ol>{L.nextSteps.map((s, i) => <li><span>0{i + 1}</span>{s}</li>)}</ol>
+      </div>
+      <div class="call">
+        <span style="font-weight:600">{L.talk}</span>
+        <a href={b.phoneHref}>{b.phone}</a>
+        <span style="color:var(--muted);font-size:14px">{L.bilingual}</span>
+      </div>
+    </aside>
+  </div>
+
+  <script src="../scripts/quote.ts"></script>
+</Base>

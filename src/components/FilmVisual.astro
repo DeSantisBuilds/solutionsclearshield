@@ -1,0 +1,13 @@
+---
+// Illustrated glass pane for each film type (stands in until real project photos are supplied).
+interface Props { visual: 'sec' | 'gra' | 'sol' | 'pri'; class?: string }
+const { visual, class: cls = '' } = Astro.props;
+---
+<div class:list={['pane', `v-${visual}`, { glint: visual === 'sec' || visual === 'sol' }, cls]} aria-hidden="true">
+  {visual === 'sec' && (
+    <svg viewBox="0 0 200 150" preserveAspectRatio="none"><g stroke="#DCE6EC" stroke-width=".8" fill="none" opacity=".72"><path d="M120 70 L60 10"/><path d="M120 70 L195 25"/><path d="M120 70 L198 105"/><path d="M120 70 L165 148"/><path d="M120 70 L40 125"/><path d="M120 70 L5 75"/><path d="M98 52 L142 55 L150 90 L114 102 L94 86 Z"/></g><circle cx="120" cy="70" r="2.6" fill="#DCE6EC"/></svg>
+  )}
+  {visual === 'sol' && <div class="sun" />}
+  {visual === 'pri' && <div class="band" />}
+  {visual === 'gra' && (<><span class="tagword">TAG</span><span class="layer" /></>)}
+</div>

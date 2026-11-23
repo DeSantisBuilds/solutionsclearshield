@@ -1,0 +1,206 @@
+---
+import '../styles/global.css';
+import Shield from '../components/Shield.astro';
+import { SITE_LIVE, SITE_URL, business, routes, films, filmOrder, other, type Lang, type RouteKey } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+  title: string;
+  description: string;
+  jsonLd?: object[];
+  noMbar?: boolean;
+  noindex?: boolean;
+}
+const { lang, route, title, description, jsonLd = [], noMbar = false, noindex = false } = Astro.props;
+const fr = lang === 'fr';
+const alt = other(lang);
+const path = routes[route][lang];
+const canonical = SITE_URL + path;
+const ogImage = `${SITE_URL}/og-image.jpg`;
+const robots = !SITE_LIVE || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+
+const business_ld = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  '@id': `${SITE_URL}/#business`,
+  name: business.name,
+  alternateName: business.shortName,
+  slogan: business.slogan[lang],
+  url: SITE_URL + routes.home[lang],
+  telephone: business.phoneIntl,
+  email: business.email,
+  image: ogImage,
+  address: { '@type': 'PostalAddress', addressLocality: 'Montréal', addressRegion: 'QC', addressCountry: 'CA' },
+  areaServed: business.areas,
+  knowsLanguage: ['fr', 'en'],
+  sameAs: [business.instagram],
+  makesOffer: filmOrder.map((k) => ({
+    '@type': 'Offer',
+    itemOffered: { '@type': 'Service', name: `${films[k].name[lang]} ${films[k].tail[lang]}`, url: SITE_URL + routes[k][lang] },
+  })),
+};
+
+const nav = {
+  films: fr ? 'Films' : 'Window films',
+  commercial: 'Commercial',
+  residential: fr ? 'Résidentiel' : 'Residential',
+  process: fr ? 'Processus' : 'Process',
+  why: fr ? 'Pourquoi nous' : 'Why us',
+  cta: fr ? 'Soumission gratuite' : 'Free quote',
+};
+const homeBase = routes.home[lang];
+---
+<!doctype html>
+<html lang={fr ? 'fr-CA' : 'en-CA'}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content={robots}>
+  <link rel="canonical" href={canonical}>
+  <link rel="alternate" hreflang="fr-CA" href={SITE_URL + routes[route].fr}>
+  <link rel="alternate" hreflang="en-CA" href={SITE_URL + routes[route].en}>
+  <link rel="alternate" hreflang="x-default" href={SITE_URL + routes[route].fr}>
+  <meta name="theme-color" content="#0D1318">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content={business.name}>
+  <meta property="og:locale" content={fr ? 'fr_CA' : 'en_CA'}>
+  <meta property="og:locale:alternate" content={fr ? 'en_CA' : 'fr_CA'}>
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={canonical}>
+  <meta property="og:image" content={ogImage}>
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json" set:html={JSON.stringify([business_ld, ...jsonLd])} />
+  <script is:inline>
+    document.documentElement.classList.add('js');
+    // Remember where the visitor came from (ad campaign tags), so the quote request can include it.
+    try {
+      var p = new URLSearchParams(location.search), u = [];
+      ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'].forEach(function (k) { var v = p.get(k); if (v) u.push(k + '=' + v); });
+      if (u.length && !sessionStorage.getItem('cs_utm')) sessionStorage.setItem('cs_utm', u.join('&').slice(0, 500));
+    } catch (e) {}
+  </script>
+  <slot name="head" />
+</head>
+<body class:list={{ 'no-mbar': noMbar }}>
+  <a class="skip" href="#main">{fr ? 'Aller au contenu' : 'Skip to content'}</a>
+  <div class="util">
+    <div class="wrap">
+      <span class="area">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A9D1E8" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+        {fr ? 'Grand Montréal et régions environnantes' : 'Greater Montreal & surrounding regions'}
+      </span>
+      <div class="util-right">
+        <a href={business.phoneHref}>{business.phone}</a>
+        <a class="mail" href={`mailto:${business.email}`}>{business.email}</a>
+        <span class="lang">
+          {fr ? <span aria-current="true">FR</span> : <a href={routes[route].fr} hreflang="fr" lang="fr">FR</a>}
+          {fr ? <a href={routes[route].en} hreflang="en" lang="en">EN</a> : <span aria-current="true">EN</span>}
+        </span>
+      </div>
+    </div>
+  </div>
+  <header class="site">
+    <div class="wrap">
+      <a class="logo" href={homeBase} aria-label={`${business.name}, ${fr ? 'accueil' : 'home'}`}>
+        <Shield />
+        <span><small>SOLUTIONS</small><strong>ClearShield</strong></span>
+      </a>
+      <nav class="main" id="nav" aria-label={fr ? 'Navigation principale' : 'Main navigation'}>
+        <div class="dd">
+          <button type="button" aria-expanded="false" aria-controls="dd-films">{nav.films} <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="dd-menu" id="dd-films">
+            {filmOrder.map((k) => (
+              <a href={routes[k][lang]} aria-current={route === k ? 'page' : undefined}>{films[k].name[lang]} {films[k].tail[lang]}</a>
+            ))}
+          </div>
+        </div>
+        <a href={routes.commercial[lang]} aria-current={route === 'commercial' ? 'page' : undefined}>{nav.commercial}</a>
+        <a href={routes.residential[lang]} aria-current={route === 'residential' ? 'page' : undefined}>{nav.residential}</a>
+        <a href={`${homeBase}#processus`}>{nav.process}</a>
+        <a href={`${homeBase}#pourquoi`}>{nav.why}</a>
+        <a href={routes.quote[lang]} aria-current={route === 'quote' ? 'page' : undefined}>{fr ? 'Soumission' : 'Quote'}</a>
+      </nav>
+      <div class="header-actions">
+        {route !== 'quote' && <a class="btn btn-light header-cta" href={routes.quote[lang]} style="padding:11px 18px;font-size:15px;min-height:44px">{nav.cta}</a>}
+        <button class="menu-btn" type="button" id="menu-btn" aria-label={fr ? 'Menu' : 'Menu'} aria-expanded="false" aria-controls="nav"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7H20M4 12H20M4 17H20"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="grid">
+        <div class="col">
+          <a class="logo" href={homeBase}><Shield size={28} /><span><small>SOLUTIONS</small><strong>ClearShield</strong></span></a>
+          <span>{business.slogan[lang]}</span>
+        </div>
+        <div class="col">
+          <span class="h">{nav.films}</span>
+          {filmOrder.map((k) => <a href={routes[k][lang]}>{films[k].name[lang]}</a>)}
+        </div>
+        <div class="col">
+          <span class="h">{fr ? 'Régions desservies' : 'Areas served'}</span>
+          <span>{business.areas.join(' · ')}</span>
+        </div>
+        <div class="col">
+          <span class="h">Contact</span>
+          <a href={business.phoneHref}>{business.phone}</a>
+          <a href={`mailto:${business.email}`}>{business.email}</a>
+          <a href={business.instagram} rel="noopener">Instagram</a>
+          <span>{business.city[lang]}</span>
+        </div>
+      </div>
+      <div class="bottom">
+        <span>© {new Date().getFullYear()} {business.name}. {fr ? 'Tous droits réservés.' : 'All rights reserved.'} {fr ? 'XPEL est une marque de commerce de XPEL, Inc.' : 'XPEL is a trademark of XPEL, Inc.'}</span>
+        <nav aria-label={fr ? 'Liens légaux' : 'Legal links'}>
+          <a href={routes.privacy[lang]}>{fr ? 'Politique de confidentialité' : 'Privacy policy'}</a>
+          <a href={routes.terms[lang]}>{fr ? "Conditions d'utilisation" : 'Terms of service'}</a>
+          <a href={routes[route][alt]} hreflang={alt} lang={alt}>{fr ? 'English' : 'Français'}</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  {!noMbar && (
+    <div class="mbar">
+      <a class="c" href={business.phoneHref}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4H9L11 9L8.5 10.5A11 11 0 0 0 13.5 15.5L15 13L20 15V19A2 2 0 0 1 18 21A16 16 0 0 1 3 6A2 2 0 0 1 5 4"/></svg>{fr ? 'Appeler' : 'Call'}</a>
+      <a class="q" href={routes.quote[lang]}>{nav.cta}</a>
+    </div>
+  )}
+
+  <script>
+    const nav = document.getElementById('nav');
+    const btn = document.getElementById('menu-btn');
+    btn?.addEventListener('click', () => {
+      const open = nav!.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    document.querySelectorAll<HTMLElement>('.dd').forEach((dd) => {
+      const b = dd.querySelector('button')!;
+      b.addEventListener('click', () => {
+        const open = dd.classList.toggle('open');
+        b.setAttribute('aria-expanded', String(open));
+      });
+      document.addEventListener('click', (e) => {
+        if (!dd.contains(e.target as Node)) { dd.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); }
+      });
+    });
+    nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { nav.classList.remove('open'); btn?.setAttribute('aria-expanded', 'false'); }));
+  </script>
+</body>
+</html>

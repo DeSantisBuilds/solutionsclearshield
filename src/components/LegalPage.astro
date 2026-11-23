@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { type Lang } from '../data/site';
+interface Props { lang: Lang; doc: 'privacy' | 'terms'; html: string }
+const { lang, doc, html } = Astro.props;
+const fr = lang === 'fr';
+const title = doc === 'privacy'
+  ? (fr ? 'Politique de confidentialité | Solutions ClearShield' : 'Privacy policy | Solutions ClearShield')
+  : (fr ? "Conditions d'utilisation | Solutions ClearShield" : 'Terms of service | Solutions ClearShield');
+const description = doc === 'privacy'
+  ? (fr ? 'Comment Solutions ClearShield recueille, utilise et protège vos renseignements personnels, conformément à la Loi 25.' : 'How Solutions ClearShield collects, uses and protects your personal information, in line with Quebec Law 25.')
+  : (fr ? "Conditions d'utilisation du site solutionsclearshield.com." : 'Terms of use of the solutionsclearshield.com website.');
+---
+<Base lang={lang} route={doc} title={title} description={description}>
+  <div class="wrap">
+    <article class="legal" set:html={html} />
+  </div>
+</Base>

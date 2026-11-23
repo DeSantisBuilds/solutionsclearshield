@@ -1,0 +1,125 @@
+---
+import Base from '../layouts/Base.astro';
+import FilmVisual from './FilmVisual.astro';
+import { SITE_URL, films, filmOrder, routes, type FilmKey, type Lang } from '../data/site';
+interface Props { lang: Lang; film: FilmKey }
+const { lang, film } = Astro.props;
+const fr = lang === 'fr';
+const f = films[film];
+const others = filmOrder.filter((k) => k !== film);
+const quoteHref = `${routes.quote[lang]}?film=${f.formValue}`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `${f.name[lang]} ${f.tail[lang]}`,
+    description: f.metaDescription[lang],
+    provider: { '@id': `${SITE_URL}/#business` },
+    areaServed: 'Greater Montreal',
+    url: SITE_URL + routes[film][lang],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: fr ? 'Accueil' : 'Home', item: SITE_URL + routes.home[lang] },
+      { '@type': 'ListItem', position: 2, name: f.name[lang], item: SITE_URL + routes[film][lang] },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: f.faq.map((x) => ({ '@type': 'Question', name: x.q[lang], acceptedAnswer: { '@type': 'Answer', text: x.a[lang] } })),
+  },
+];
+const icons = [
+  '<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 12L7 6M12 12L17 8M12 12L16 18M12 12L7 17"/>',
+  '<path d="M12 3L20 6V12C20 17 16.5 20 12 21.5C7.5 20 4 17 4 12V6Z"/><path d="M9 12L11 14L15 10"/>',
+  '<path d="M2 12C5 6 9 4 12 4C15 4 19 6 22 12C19 18 15 20 12 20C9 20 5 18 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+  '<circle cx="12" cy="12" r="4"/><path d="M12 2V5M12 19V22M2 12H5M19 12H22M4.9 4.9L7 7M17 17L19.1 19.1M4.9 19.1L7 17M17 7L19.1 4.9"/>',
+];
+---
+<Base lang={lang} route={film} title={f.metaTitle[lang]} description={f.metaDescription[lang]} jsonLd={jsonLd}>
+  <section class="page-hero dark">
+    <div class="wrap">
+      <ol class="crumb" aria-label={fr ? "Fil d'Ariane" : 'Breadcrumb'}>
+        <li><a href={routes.home[lang]}>{fr ? 'Accueil' : 'Home'}</a></li>
+        <li><a href={`${routes.home[lang]}#films`}>{fr ? 'Films' : 'Window films'}</a></li>
+        <li aria-current="page">{f.name[lang]}</li>
+      </ol>
+      <div class="page-row">
+        <div class="copy">
+          <span class="eyebrow">{f.kicker[lang]} · {fr ? 'Grand Montréal' : 'Greater Montreal'}</span>
+          <h1>{f.name[lang]} <span>{f.tail[lang]}</span></h1>
+          <p class="lede">{f.lede[lang]}</p>
+          <div class="ctas">
+            <a class="btn btn-light" href={quoteHref}>{fr ? 'Soumission pour ce film' : 'Get a quote for this film'} <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <FilmVisual visual={f.visual} class="page-visual" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section paper">
+    <div class="wrap">
+      <div class="head"><div>
+        <h2 class="big">{fr ? 'Ce que ce film fait pour vous' : 'What this film does for you'}</h2>
+      </div></div>
+      <ul class="benefits">
+        {f.benefits[lang].map((b, i) => (
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#1F5E85" stroke-width="1.8" set:html={icons[i % icons.length]} />{b}</li>
+        ))}
+      </ul>
+      {f.idealFor && (
+        <div class="ideal"><b>{fr ? 'Idéal pour' : 'Ideal for'}</b>{f.idealFor[lang].map((x) => <span class="pill">{x}</span>)}</div>
+      )}
+      {f.finishes && (
+        <div class="ideal"><b>{fr ? 'Finis offerts' : 'Finishes'}</b>{f.finishes[lang].map((x) => <span class="pill">{x}</span>)}</div>
+      )}
+    </div>
+  </section>
+
+  <section class="section haze">
+    <div class="wrap split">
+      <div class="copy">
+        <span class="eyebrow">{fr ? 'Étape 03 de notre processus' : 'Step 03 of our process'}</span>
+        <h2 class="big">{fr ? 'On vérifie votre verre avant de recommander un film.' : 'We check your glass before recommending a film.'}</h2>
+      </div>
+      <div class="copy">
+        <p>{fr
+          ? "Tous les films ne conviennent pas à tous les verres. Un mauvais choix, surtout sur une fenêtre thermos, peut causer un stress thermique. On identifie votre type de verre et on ne retient que les films compatibles. C'est l'étape que d'autres sautent."
+          : "Not every film suits every glass. The wrong choice, especially on a sealed double-pane window, can cause thermal stress. We identify your glass type and keep only compatible films. It's the step others skip."}</p>
+        <p><a href={`${routes.home[lang]}#processus`}>{fr ? 'Voir les 4 étapes de notre processus' : 'See the 4 steps of our process'}</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><div><h2 class="big">{fr ? 'Questions fréquentes' : 'Frequently asked questions'}</h2></div></div>
+      <div class="faq">
+        {f.faq.map((x, i) => (
+          <details open={i === 0}><summary>{x.q[lang]}</summary><p>{x.a[lang]}</p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark">
+    <div class="wrap">
+      <div class="cta-row">
+        <div>
+          <h2 class="big">{fr ? 'Protégez ce qui compte.' : 'Protect what matters.'}</h2>
+          <p>{fr ? "Parlez-nous de vos fenêtres. On vous rappelle pour planifier l'évaluation gratuite sur place." : "Tell us about your windows. We'll call you back to book your free on-site assessment."}</p>
+        </div>
+        <a class="btn btn-light" href={quoteHref}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="related">
+        <span>{fr ? 'Autres films' : 'Other films'}</span>
+        {others.map((k) => <a href={routes[k][lang]}>{films[k].name[lang]} <span aria-hidden="true">→</span></a>)}
+      </div>
+    </div>
+  </section>
+</Base>

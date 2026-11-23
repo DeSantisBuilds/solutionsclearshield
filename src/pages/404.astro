@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes } from '../data/site';
+---
+<Base lang="fr" route="home" noindex title="Page introuvable | Solutions ClearShield" description="Cette page n'existe pas.">
+  <section class="dark">
+    <div class="wrap">
+      <div class="done">
+        <span class="eyebrow">404</span>
+        <h1>Page introuvable <span lang="en" style="display:block;color:var(--on-ink-dim);font-size:.6em">Page not found</span></h1>
+        <p>Cette page n'existe pas ou a été déplacée. <span lang="en">This page doesn't exist or has moved.</span></p>
+        <div class="ctas">
+          <a class="btn btn-light" href={routes.home.fr}>Accueil</a>
+          <a class="btn btn-ghost" href={routes.home.en} lang="en">Home (English)</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

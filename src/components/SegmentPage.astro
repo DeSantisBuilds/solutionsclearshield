@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import FilmCard from './FilmCard.astro';
+import QuoteBand from './QuoteBand.astro';
+import { SITE_URL, routes, segments, steps, type Lang } from '../data/site';
+interface Props { lang: Lang; segment: 'commercial' | 'residential' }
+const { lang, segment } = Astro.props;
+const fr = lang === 'fr';
+const s = segments[segment];
+const typeValue = segment === 'commercial' ? 'commercial' : 'residentiel';
+const jsonLd = [{
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: fr ? 'Accueil' : 'Home', item: SITE_URL + routes.home[lang] },
+    { '@type': 'ListItem', position: 2, name: s.kicker[lang], item: SITE_URL + routes[segment][lang] },
+  ],
+}];
+---
+<Base lang={lang} route={segment} title={s.metaTitle[lang]} description={s.metaDescription[lang]} jsonLd={jsonLd}>
+  <section class="page-hero dark">
+    <div class="wrap">
+      <ol class="crumb" aria-label={fr ? "Fil d'Ariane" : 'Breadcrumb'}>
+        <li><a href={routes.home[lang]}>{fr ? 'Accueil' : 'Home'}</a></li>
+        <li aria-current="page">{s.kicker[lang]}</li>
+      </ol>
+      <div class="page-row">
+        <div class="copy">
+          <span class="eyebrow">{s.kicker[lang]} · {fr ? 'Grand Montréal' : 'Greater Montreal'}</span>
+          <h1>{s.title[lang]}</h1>
+          <p class="lede">{s.body[lang]}</p>
+          <div class="pills">{s.tags[lang].map((x) => <span class="pill">{x}</span>)}</div>
+          <div class="ctas"><a class="btn btn-light" href={`${routes.quote[lang]}?type=${typeValue}`}>{fr ? 'Obtenir ma soumission gratuite' : 'Get my free quote'} <span aria-hidden="true">→</span></a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><div>
+        <span class="eyebrow">{fr ? 'Les films' : 'The films'}</span>
+        <h2 class="big">{segment === 'commercial'
+          ? (fr ? 'Pour vos vitrines et vos espaces de travail' : 'For your storefront and workspaces')
+          : (fr ? 'Pour votre maison ou votre condo' : 'For your home or condo')}</h2>
+      </div></div>
+      <div class="films">{s.films.map((k) => <FilmCard film={k} lang={lang} />)}</div>
+    </div>
+  </section>
+
+  <section class="section dark">
+    <div class="wrap">
+      <div class="head"><div>
+        <span class="eyebrow">{fr ? 'Avant chaque soumission' : 'Before every quote'}</span>
+        <h2 class="big">{fr ? "Rien n'est laissé au hasard." : 'Nothing is left to chance.'}</h2>
+      </div></div>
+      <ol class="steps">
+        {steps.map((st, i) => (
+          <li class:list={{ key: i === 2 }}><span class="n">0{i + 1}</span><span class="t">{st.title[lang]}</span><span class="d">{st.body[lang]}</span></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <QuoteBand lang={lang} />
+</Base>
