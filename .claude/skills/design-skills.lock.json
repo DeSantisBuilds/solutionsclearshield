@@ -1,0 +1,178 @@
+{
+  "$comment": "Written by DeSantisBuilds/design-skills scripts/install.mjs. Do not edit by hand; re-run the installer. Verify with scripts/verify.mjs.",
+  "designSkillsCommit": "db00cf08a685f02628558750d9a1fde9069e5662",
+  "profile": "web",
+  "installedAt": "2026-11-27T14:25:36.030Z",
+  "skills": {
+    "impeccable": {
+      "name": "impeccable",
+      "source": "impeccable",
+      "upstream": "https://github.com/pbakaus/impeccable",
+      "commit": "2fc5e1459efbbf06d92c7306517c286bf12490cf",
+      "version": "4.11.1",
+      "license": "Apache-2.0",
+      "overlay": false,
+      "treeSha256": "eea782f8121a1c3510def269fc6fb1cfa0f7abe9d49e7b813e038a9aed7dcb36"
+    },
+    "design-taste-frontend": {
+      "name": "design-taste-frontend",
+      "source": "taste-skill",
+      "upstream": "https://github.com/Leonxlnx/taste-skill",
+      "commit": "952435f63acece7d2fcb4b4d3c1786c1c43603e0",
+      "version": "2.5.1",
+      "license": "MIT",
+      "overlay": true,
+      "treeSha256": "9cd424150ee9aaeb66dc84929e168c061c24481eac1c790ebf784896f291d64f"
+    },
+    "emil-design-eng": {
+      "name": "emil-design-eng",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "51816e6811ab146930d5a998443fca819af70d5d8ec9688b20589bd8e49f84e7"
+    },
+    "animate": {
+      "name": "animate",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "cb65e650edb95b8cf6e24a853480c2490d139d0cdbe2f1b77b6a2dbd19971036"
+    },
+    "review-animations": {
+      "name": "review-animations",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "730d10047b5686a2767f0367409cfb83b87c76ef7eee6550ffc97ca6c7996080"
+    },
+    "improve-animations": {
+      "name": "improve-animations",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "260bee4a7950829e6994bc7b5941bed21e4beb799591a933996982a10b0342df"
+    },
+    "remove-animations": {
+      "name": "remove-animations",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "dec874f26d302755a1814f68d84f55666fa323a6062fec8dfe8dec6a52926012"
+    },
+    "find-animation-opportunities": {
+      "name": "find-animation-opportunities",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "21bd576583bf612daad19d05d2075682a5a364de41d8a78816c420ead16e6f75"
+    },
+    "animation-performance": {
+      "name": "animation-performance",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "edbc7194e0f6e1b58db4a3635688690f818794a68eddc732164aae424047eed2"
+    },
+    "animation-vocabulary": {
+      "name": "animation-vocabulary",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "e1de71d33dd750db6d3393f0c10b285aae9d165bfbd69a46edfcda41e5da4e25"
+    },
+    "choreograph": {
+      "name": "choreograph",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "968afb1896c11f1b11a4cf4b23837cc177c1358144d2ea0b44ad55eaf33b6bf8"
+    },
+    "apple-design": {
+      "name": "apple-design",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "0cd3edc7b448c7451e9ef93efef4b461c2b90927d60a38ff528e4c9ea6930435"
+    },
+    "gestures": {
+      "name": "gestures",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "84b3cda79dad25a9f9aa45bfae7322bf088bae092eb0bd84a2ac2a45cb5b1b9f"
+    },
+    "break-ui": {
+      "name": "break-ui",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "3f543b32a5ff1f1e7bede9a0fec8270a8dec339c7a5431fc5a7ab71c4d58b05f"
+    },
+    "prototype": {
+      "name": "prototype",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "02a561a011ced3de6f4d9f26d1a942103a6bcf70f32dc9f1b709c5a23ea9ca4a"
+    },
+    "pick-ui-library": {
+      "name": "pick-ui-library",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "655919a30965d189d996ca338342e97579f82aa90f725129b428dc9d1d746ec9"
+    },
+    "learn-taste": {
+      "name": "learn-taste",
+      "source": "emil-kowalski",
+      "upstream": "https://github.com/emilkowalski/skills",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",
+      "version": "unversioned (commit 2026-11-15)",
+      "license": "MIT",
+      "overlay": false,
+      "treeSha256": "9e8013d384554a6ce1d12a3a957ee9de4fb1b7a88a9b01f5c65b46ade992bf27"
+    }
+  }
+}
